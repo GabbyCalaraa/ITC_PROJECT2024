@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdU Sport Goods</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('adu.png'); 
+            background-size: auto; 
+            background-repeat: repeat; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #add8e6; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .item {
+            border: 1px solid #dcdcdc; 
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #00004d; 
+        }
+
+        button {
+            background-color: #007bff; 
+            color: #fff; 
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3; 
+        }
+
+        h1 {
+            color: #007bff;         }
+
+        h3 {
+            color: #fff; 
+        }
+
+        p {
+            color: #fff; 
+        }
+    </style>
+    </head>
+<body>
+    <div class="container">
+        <h1>Adamson University Sport Goods</h1>
+        <div id="items-container"></div>
+        <button onclick="checkout()">Proceed to Checkout</button>
+        <div id="cart-summary"></div>
+    </div>
+
+    <script>
+        const sportItems = [
+            { id: 1, name: "Adu Football", priceUSD: 25.99, imageUrl: "1.jpg" },
+            { id: 2, name: "AdU Basketball", priceUSD: 19.99, imageUrl: "2.jpg" },
+            { id: 3, name: "AdU Tennis Racket", priceUSD: 89.99, imageUrl: "3.jpg" },
+            { id: 4, name: "AdU Golf Clubs Set", priceUSD: 249.99, imageUrl: "4.jpg" },
+            { id: 5, name: "AdU Running Shoes", priceUSD: 59.99, imageUrl: "5.jpg" },
+            { id: 6, name: "AdU Boxing Gloves", priceUSD: 39.99, imageUrl: "6.jpg" },
+            { id: 7, name: "AdU Yoga Mat", priceUSD: 29.99, imageUrl: "7.jpg" },
+            { id: 8, name: "AdU Swimming Goggles", priceUSD: 15.99, imageUrl: "8.jpg" },
+            { id: 9, name: "AdU Cycling Helmet", priceUSD: 49.99, imageUrl: "9.jpg" },
+            { id: 10, name: "AdU Soccer Cleats", priceUSD: 49.99, imageUrl: "10.jpg" }
+        ];
+
+        const exchangeRateUSDToPHP = 50.0; //1 USD = 50 PHP
+
+        let cart = [];
+
+        function displayItems() {
+            const itemsContainer = document.getElementById("items-container");
+
+            sportItems.forEach(item => {
+                const itemElement = document.createElement("div");
+                itemElement.className = "item";
+
+                const imgElement = document.createElement("img");
+                imgElement.src = item.imageUrl;
+                imgElement.alt = item.name;
+                imgElement.style.width = "150px";
+                itemElement.appendChild(imgElement);
+
+                const pricePHP = (item.priceUSD * exchangeRateUSDToPHP).toFixed(2);
+                const detailsElement = document.createElement("div");
+                detailsElement.innerHTML = `
+                    <h3>${item.name}</h3>
+                    <p>Price: &#x20B1;${pricePHP}</p>
+                    <button onclick="addToCart(${item.id})">Add to Cart</button>
+                `;
+                itemElement.appendChild(detailsElement);
+
+                itemsContainer.appendChild(itemElement);
+            });
+        }
+
+        function addToCart(itemId) {
+            const selectedItem = sportItems.find(item => item.id === itemId);
+            if (selectedItem) {
+                cart.push(selectedItem);
+                updateCartSummary();
+                alert(`Added ${selectedItem.name} to cart!`);
+            }
+        }
+
+        function updateCartSummary() {
+            const cartSummaryElement = document.getElementById("cart-summary");
+            cartSummaryElement.innerHTML = "<h2>Cart Summary</h2>";
+
+            let total = 0;
+            cart.forEach(item => {
+                const pricePHP = (item.priceUSD * exchangeRateUSDToPHP).toFixed(2);
+                cartSummaryElement.innerHTML += `
+                    <div>
+                        <p>${item.name} - &#x20B1;${pricePHP}</p>
+                    </div>
+                `;
+                total += item.priceUSD * exchangeRateUSDToPHP;
+            });
+
+            cartSummaryElement.innerHTML += `<p><strong>Total: &#x20B1;${total.toFixed(2)}</strong></p>`;
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Your cart is empty. Please add items to your cart first.");
+            } else {
+                const totalAmountPHP = cart.reduce((acc, item) => acc + item.priceUSD * exchangeRateUSDToPHP, 0);
+                alert(`This is made by Victor Gabriel B. Calara. Thank you for buying! Total amount: Php${totalAmountPHP.toFixed(2)}`);
+
+                // Reset cart after checkout
+                cart = [];
+                updateCartSummary();
+            }
+        }
+
+        window.onload = () => {
+            displayItems();
+            updateCartSummary();
+        };
+    </script>
+</body>
+</html>
